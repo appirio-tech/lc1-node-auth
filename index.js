@@ -48,11 +48,11 @@ exports.auth = function(app, config, next) {
   if (authEnabled && authEnabled !== 'false') {
     // Add the jwt middleware to the paths
     checkPaths.checkPath(app,
-      [jwtCheck.jwtCheck(config.get('auth0')), tcUser.tcUser, checkPerms.checkPerms, next]);
+      [jwtCheck.jwtCheck(config.auth0, tcUser.tcUser, checkPerms.checkPerms, next]);
 
     // currently this is hard coded
     app.get('/challenges/:challengeId/register',
-      [jwtCheck.jwtCheck(config.get('auth0')), tcUser.tcUser, next]);
+      [jwtCheck.jwtCheck(config.auth0, tcUser.tcUser, next]);
   } else {
     // fake auth
     app.use(tcUser.mockUser);

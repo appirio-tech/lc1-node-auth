@@ -11,8 +11,9 @@ var jwtCheck = require('./lib/jwtCheck');
 var checkPaths = null;
 var tcUser = null;
 var checkPerms = null;
-var safeList = null;
 var helper = require('./lib/helper');
+var _ = require('lodash');
+var _config = null;
 
 /**
  * Init the module. require all dependencies and cache config
@@ -21,11 +22,11 @@ var helper = require('./lib/helper');
 function init(config) {
   // cache config
   helper.cacheConfig(config);
+  _config = config;
   checkPaths = require('./lib/checkPath');
   tcUser = require('./lib/tcUser');
   checkPerms = require('./lib/checkPerms');
-  safeList = require('./lib/safelist');
-};
+}
 
 /**
  * Authentication middleware
@@ -68,6 +69,44 @@ exports.getSigninUser = function(req) {
 /**
  * Safelist exports
  */
-exports.getUserSafeList = safeList.getUserSafeList;
 
-exports.currentUserIsSafe = safeList.currentUserIsSafe;
+function getUserSafeList() {
+  var safeListUsers = [];
+  if (_config.auth.safeList.users) {
+    safeListUsers = _config.auth.safeList.users;
+  } else {
+    safeListUsers = [
+      'dayal',
+      'rockabilly',
+      'kbowerma',
+      ' _indy',
+      'appiriowes'
+    ];
+  }
+
+  // If from config and this is not an array then split on comma
+  if (!_.isArray(safeListUsers)) {
+    safeListUsers = safeListUsers.split(',');
+  }
+
+  return safeListUsers;
+}
+
+function currentUserSafe(req) {
+  return getUserSafeList().indexOf(tcUser.getSigninUser(req));
+}
+
+exports.safeList = function(req, res, next) {
+  if (_config.auth.safeList.enabled && _config.auth.safeList.enabled) {
+    if (!currentUserSafe(req)) {
+      // Remove user and tcUser This will cause requireAuth middleware to return
+      // @TODO Later we might want to log this info so we shouldn't be deleting it
+      delete req.user;
+      delete req.tcUser;
+    }
+  }
+  next();
+};
+
+exports.getUserSafeList = getUserSafeList;
+exports.currentUserIsSafe = currentUserSafe;

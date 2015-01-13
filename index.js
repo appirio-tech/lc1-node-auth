@@ -8,11 +8,24 @@
  */
 
 var jwtCheck = require('./lib/jwtCheck');
-var checkPaths = require('./lib/checkPath');
-var tcUser = require('./lib/tcUser');
-var checkPerms = require('./lib/checkPerms');
-var safeList = require('./lib/safelist');
+var checkPaths = null;
+var tcUser = null;
+var checkPerms = null;
+var safeList = null;
 var helper = require('./lib/helper');
+
+/**
+ * Init the module. require all dependencies and cache config
+ * @param  {Object}   config    Configuration object
+ */
+function init(config) {
+  // cache config
+  helper.cacheConfig(config);
+  checkPaths = require('./lib/checkPath');
+  tcUser = require('./lib/tcUser');
+  checkPerms = require('./lib/checkPerms');
+  safeList = require('./lib/safelist');
+};
 
 /**
  * Authentication middleware
@@ -21,8 +34,8 @@ var helper = require('./lib/helper');
  * @param  {Function} next      next function in middleware chain
  */
 exports.auth = function(app, config, next) {
-  // cache config
-  helper.cacheConfig(config);
+  // init module
+  init(config);
   var authEnabled = false;
 
   if (config.auth.enabled) {

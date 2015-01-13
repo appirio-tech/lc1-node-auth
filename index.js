@@ -20,6 +20,7 @@ var _config = null;
  * @param  {Object}   config    Configuration object
  */
 function init(config) {
+  helper.checkConfig(config);
   // cache config
   helper.cacheConfig(config);
   _config = config;
@@ -72,7 +73,7 @@ exports.getSigninUser = function(req) {
 
 function getUserSafeList() {
   var safeListUsers = [];
-  if (_config.auth.safeList.users) {
+  if (_config.auth.safeList && _config.auth.safeList.users) {
     safeListUsers = _config.auth.safeList.users;
   } else {
     safeListUsers = [
@@ -97,7 +98,7 @@ function currentUserSafe(req) {
 }
 
 exports.safeList = function(req, res, next) {
-  if (_config.auth.safeList.enabled && _config.auth.safeList.enabled) {
+  if (_config.auth.safeList && _config.auth.safeList.enabled) {
     if (!currentUserSafe(req)) {
       // Remove user and tcUser This will cause requireAuth middleware to return
       // @TODO Later we might want to log this info so we shouldn't be deleting it

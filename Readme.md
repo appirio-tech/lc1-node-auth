@@ -1,4 +1,4 @@
-serenity partial response helper
+serenity authorizaiton node module
 ===
 
 Common module for serenity applications.
@@ -11,7 +11,7 @@ This is the authentication module for serenity
 Install via npm and git
 
 ```
-npm install git+https://github.com/riteshsangwan/serenity-auth.git
+npm install git+https://github.com/appirio-tech/lc1-node-auth.git
 ```
 
 ## Configuration
@@ -51,7 +51,7 @@ This is the default configuration which is used in lc1-challenge-service. There 
 ## Examples:
 
 ```
-var auth = require('serenity-auth');
+var auth = require('lc1-node-auth');
 // central point for all authentication
 auth.auth(app, config, routeHelper.errorHandler);
 // NOTE: Above the last argument is the error handler middleware. If any error occured in serenity-middleware it will be passed to next middleware. This removes the dependency with route-helper

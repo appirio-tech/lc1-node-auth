@@ -1,4 +1,4 @@
-serenity partial response helper
+serenity authorizaiton node module
 ===
 
 Common module for serenity applications.
@@ -11,7 +11,7 @@ This is the authentication module for serenity
 Install via npm and git
 
 ```
-npm install git+https://github.com/riteshsangwan/serenity-auth.git
+npm install git+https://github.com/appirio-tech/lc1-node-auth.git
 ```
 
 ## Configuration

@@ -51,7 +51,7 @@ This is the default configuration which is used in lc1-challenge-service. There 
 ## Examples:
 
 ```
-var auth = require('serenity-auth');
+var auth = require('lc1-node-auth');
 // central point for all authentication
 auth.auth(app, config, routeHelper.errorHandler);
 // NOTE: Above the last argument is the error handler middleware. If any error occured in serenity-middleware it will be passed to next middleware. This removes the dependency with route-helper

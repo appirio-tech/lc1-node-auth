@@ -14,6 +14,7 @@ var checkPerms = null;
 var helper = require('./lib/helper');
 var _ = require('lodash');
 var _config = null;
+var errors = require('common-errors');
 
 /**
  * Init the module. require all dependencies and cache config
@@ -105,6 +106,19 @@ exports.safeList = function(req, res, next) {
       delete req.user;
       delete req.tcUser;
     }
+  }
+  next();
+};
+
+/**
+ * Authentication handler for authenticated paths defined in configuration settings
+ * @param req the request
+ * @param res the response
+ * @param next the next
+ */
+exports.requireAuth = function(req, res, next) {
+  if(!req.user || !req.tcUser) {
+    return next(new errors.AuthenticationRequiredError("User is not authenticated"));
   }
   next();
 };

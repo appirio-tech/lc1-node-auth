@@ -1,14 +1,14 @@
 {
   "name": "serenity-auth",
   "description": "Serenity authentication module",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "spanhawk",
   "contributors": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/riteshsangwan/serenity-auth.git"
+    "url": "https://github.com/appirio-tech/lc1-node-auth.git"
   },
-  "homepage": "https://github.com/riteshsangwan/serenity-auth",
+  "homepage": "https://github.com/appirio-tech/lc1-node-auth",
   "keywords": [
     "serenity"
   ],

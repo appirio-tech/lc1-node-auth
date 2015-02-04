@@ -54,6 +54,20 @@ exports.auth = function(app, config, next) {
     // currently this is hard coded
     app.get('/challenges/:challengeId/register',
       [jwtCheck.jwtCheck(config.auth0), tcUser.tcUser, next]);
+
+    // Hard code file permission
+    app.get('/challenges/:challengeId/files/:fileId/download',
+      [jwtCheck.jwtCheck(config.auth0), tcUser.tcUser, next]);
+
+    app.get('/challenges/:challengeId/files/:fileId/upload',
+      [jwtCheck.jwtCheck(config.auth0), tcUser.tcUser, next]);
+
+    app.get('/challenges/:challengeId/submissions/:submissionId/files/:fileId/upload',
+      [jwtCheck.jwtCheck(config.auth0), tcUser.tcUser, next]);
+
+    app.get('/challenges/:challengeId/submissions/:submissionId/files/:fileId/download',
+      [jwtCheck.jwtCheck(config.auth0), tcUser.tcUser, next]);
+
   } else {
     // fake auth
     app.use(tcUser.mockUser);
@@ -69,48 +83,6 @@ exports.getSigninUser = function(req) {
 };
 
 /**
- * Safelist exports
- */
-
-function getUserSafeList() {
-  var safeListUsers = [];
-  if (_config.auth.safeList && _config.auth.safeList.users) {
-    safeListUsers = _config.auth.safeList.users;
-  } else {
-    safeListUsers = [
-      'dayal',
-      'rockabilly',
-      'kbowerma',
-      ' _indy',
-      'appiriowes'
-    ];
-  }
-
-  // If from config and this is not an array then split on comma
-  if (!_.isArray(safeListUsers)) {
-    safeListUsers = safeListUsers.split(',');
-  }
-
-  return safeListUsers;
-}
-
-function currentUserSafe(req) {
-  return getUserSafeList().indexOf(tcUser.getSigninUser(req));
-}
-
-exports.safeList = function(req, res, next) {
-  if (_config.auth.safeList && _config.auth.safeList.enabled) {
-    if (!currentUserSafe(req)) {
-      // Remove user and tcUser This will cause requireAuth middleware to return
-      // @TODO Later we might want to log this info so we shouldn't be deleting it
-      delete req.user;
-      delete req.tcUser;
-    }
-  }
-  next();
-};
-
-/**
  * Authentication handler for authenticated paths defined in configuration settings
  * @param req the request
  * @param res the response
@@ -123,5 +95,9 @@ exports.requireAuth = function(req, res, next) {
   next();
 };
 
-exports.getUserSafeList = getUserSafeList;
-exports.currentUserIsSafe = currentUserSafe;
+/**
+ * Expose the check permissions to other modules
+ */
+exports.currentUserPass = function(req) {
+  return checkPerms.currentUserPass(req);
+};
